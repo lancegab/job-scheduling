@@ -4,17 +4,8 @@ var context = canvas.getContext("2d");
 //Array initialization for jobs
 var jobs = [];
 
-function readByLine(arr){
-    //Read input by line and create new Job object
-    jobs = [];
-    for(i = 1; i < arr.length; i++){
-        line = arr[i].split(/\t\t\t|\t\t|\t/);
-        if(line.length < 4)
-            continue;
-        else
-            jobs.push(new Job(parseInt(line[0]), parseInt(line[1]), parseInt(line[2]), parseInt(line[3])));
-    }
-}
+//////////////////////////////////////////////////////////////////
+////////////////////// FILE READING //////////////////////////////
 
 function readSingleFile(evt) {
     //Retrieve the first (and only!) File from the FileList object
@@ -32,16 +23,23 @@ function readSingleFile(evt) {
         alert("Failed to load file");
     }
 }
+function readByLine(arr){
+    //Read input by line and create new Job object
+    jobs = [];
+    for(i = 1; i < arr.length; i++){
+        line = arr[i].split(/\t\t\t|\t\t|\t/);
+        if(line.length < 4)
+            continue;
+        else
+            jobs.push(new Job(parseInt(line[0]), parseInt(line[1]), parseInt(line[2]), parseInt(line[3])));
+    }
+}
 
-document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
-document.getElementById('FCFS').addEventListener('click', FCFS, false);
-document.getElementById('SJF').addEventListener('click', SJF, false);
-// document.getElementById('SRPT').addEventListener('click', SRPT, false);
-document.getElementById('PRIORITY').addEventListener('click', PRIORITY, false);
-// document.getElementById('ROUND-ROBIN').addEventListener('click', ROUNDROBIN, false);
+//////////////////////////////////////////////////////////////////
+////////////////////////// CONSTRUCTOR ///////////////////////////
 
 function Job(id, arrival, burstTime, priority){
-    console.log("JOB: ", id, arrival, burstTime, priority);
+    //Job constructor
     this.id = id;
     this.arrival = arrival;
     this.burstTime = burstTime;
@@ -51,6 +49,8 @@ function Job(id, arrival, burstTime, priority){
     this.computingTime = 0;
 }
 
+//////////////////////////////////////////////////////////////////
+///////////////////// SCHEDULING ALGORITHMS //////////////////////
 
 function FCFS(){
     console.log("FCFS");
@@ -86,6 +86,9 @@ function SJF(){
     renderUI(tempJobs, type);
 }
 
+function SRPT(){
+}
+
 function PRIORITY(){
     console.log("PRIORITY");
     var type = "PRIORITY";
@@ -94,7 +97,7 @@ function PRIORITY(){
 
     tempJobs.sort(function(a, b) {
         if(a.priority == b.priority)
-            return a.burstTime - b.burstTime;
+            return a.arrival - b.arrival;
         else
             return a.priority - b.priority;
     });
@@ -106,8 +109,14 @@ function PRIORITY(){
     }
 
     renderUI(tempJobs, type);
-
 }
+
+function ROUNDROBIN(){
+}
+
+//////////////////////////////////////////////////////////////////
+/////////////////////// UI RENDERING /////////////////////////////
+
 
 function renderUI(tempJobs, type){
     //function to render user interface to canvas
@@ -141,3 +150,16 @@ function renderUI(tempJobs, type){
         }
     }
 }
+
+//////////////////////////////////////////////////////////////////
+////////////////////// EVENT LISTENERS ///////////////////////////
+
+//Add functionality to HTML buttons
+document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+document.getElementById('FCFS').addEventListener('click', FCFS, false);
+document.getElementById('SJF').addEventListener('click', SJF, false);
+document.getElementById('SRPT').addEventListener('click', SRPT, false);
+document.getElementById('PRIORITY').addEventListener('click', PRIORITY, false);
+document.getElementById('ROUND-ROBIN').addEventListener('click', ROUNDROBIN, false);
+
+//////////////////////////////////////////////////////////////////
